@@ -77,10 +77,15 @@ function App() {
   const [theme, setTheme] = useState("light");
   const [quote, setQuote] = useState({});
   const getQuote = async () => {
-    const response = await fetch("https://api.quotable.io/random");
-    const quote = await response.json();
-    setQuote(quote);
-    console.log(quote);
+    try {
+      const response = await fetch("https://api.quotable.io/random");
+      const quote = await response.json();
+      setQuote(quote);
+      console.log(quote);
+    } catch (err) {
+      getQuote();
+      toast.error("Error fetching quote from server! Retrying...");
+    }
   };
 
   useEffect(() => {
