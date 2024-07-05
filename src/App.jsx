@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import toast, { Toaster } from "react-hot-toast";
+import Loader from "./components/loader.component";
 
 const CopyToClipboard = async (text) => {
   toast.success("Quote copied!");
@@ -26,7 +27,9 @@ function App() {
   const [theme, setTheme] = useState("light");
   const [quote, setQuote] = useState({});
   const [tag, setTag] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const getQuote = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch(
         `https://api.quotable.io/quotes/random?tags=${tag}`
@@ -38,6 +41,8 @@ function App() {
         getQuote();
       }, 250);
       toast.error("Error fetching quote from server! Retrying...");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -65,29 +70,47 @@ function App() {
     getQuote();
   }, [tag]);
 
+  const tags = [
+    {
+      title: "Any",
+      onClick: () => setTag(""),
+      variant: tag === "" ? "outlined" : "filled",
+    },
+
+    {
+      title: "Love",
+      onClick: () => setTag("love"),
+      variant: tag === "love" ? "outlined" : "filled",
+    },
+    {
+      title: "Happiness",
+      onClick: () => setTag("happiness"),
+      variant: tag === "happiness" ? "outlined" : "filled",
+    },
+    {
+      title: "Technology",
+      onClick: () => setTag("technology"),
+      variant: tag === "technology" ? "outlined" : "filled",
+    },
+    {
+      title: "Famous Quotes",
+      onClick: () => setTag("famous-quotes"),
+      variant: tag === "famous-quotes" ? "outlined" : "filled",
+    },
+    {
+      title: "Sports",
+      onClick: () => setTag("sports"),
+      variant: tag === "sports" ? "outlined" : "filled",
+    },
+    {
+      title: "Wisdom",
+      onClick: () => setTag("wisdom"),
+      variant: tag === "wisdom" ? "outlined" : "filled",
+    },
+  ];
+
   return (
     <>
-      {/* <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p> */}
-
       <Grid
         container
         sx={{
@@ -141,28 +164,6 @@ function App() {
                   </div>
                 </div>
               </label>
-              {/* <FormControlLabel
-                control={
-                  <IOSSwitch
-                    sx={{ m: 1 }}
-                    onChange={() =>
-                      setTheme((prev) => (prev === "light" ? "dark" : "light"))
-                    }
-                  />
-                }
-                label={
-                  <Typography
-                    sx={{
-                      color: theme === "light" ? "#000" : "#fff",
-                      fontFamily: "IBM Plex Mono , monospace",
-                      fontSize: 16,
-                      transition: "all 0.4s ease-in-out",
-                    }}
-                  >
-                    {theme === "light" ? "Dark" : "Light"}
-                  </Typography>
-                }
-              /> */}
             </Box>
           </Stack>
         </Grid>
@@ -285,42 +286,22 @@ function App() {
               >
                 Get by tags
               </Typography>
-
-              <Chip
-                label="Any"
-                onClick={() => setTag("")}
-                variant={tag === "" ? "outlined" : "filled"}
-              />
-              <Chip
-                label="Love"
-                onClick={() => setTag("love")}
-                variant={tag === "love" ? "outlined" : "filled"}
-              />
-              <Chip
-                label="Happiness"
-                onClick={() => setTag("happiness")}
-                variant={tag === "happiness" ? "outlined" : "filled"}
-              />
-              <Chip
-                label="Technology"
-                onClick={() => setTag("technology")}
-                variant={tag === "technology" ? "outlined" : "filled"}
-              />
-              <Chip
-                label="Famous Quotes"
-                onClick={() => setTag("famous-quotes")}
-                variant={tag === "famous-quotes" ? "outlined" : "filled"}
-              />
-              <Chip
-                label="Sports"
-                onClick={() => setTag("sports")}
-                variant={tag === "sports" ? "outlined" : "filled"}
-              />
-              <Chip
-                label="Wisdom"
-                onClick={() => setTag("wisdom")}
-                variant={tag === "wisdom" ? "outlined" : "filled"}
-              />
+              {tags.map((tag) => (
+                <Chip
+                  key={tag.title}
+                  label={tag.title}
+                  sx={{
+                    color: theme === "light" ? "#000" : "#fff",
+                    fontFamily: "IBM Plex Mono , monospace",
+                    transition: "all 0.4s ease-in-out",
+                    "&:hover": {
+                      background: "#34D399",
+                    },
+                  }}
+                  onClick={tag.onClick}
+                  variant={tag.variant}
+                />
+              ))}
             </Stack>
           </Stack>
         </Grid>
@@ -346,6 +327,7 @@ function App() {
         </Grid>
       </Grid>
       <Toaster />
+      {isLoading && <Loader />}
     </>
   );
 }
