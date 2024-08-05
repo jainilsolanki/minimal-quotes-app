@@ -32,7 +32,10 @@ function App() {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `https://api.quotable.io/quotes/random?tags=${tag}`
+        `https://api.api-ninjas.com/v1/quotes?category=${tag}`,
+        {
+          headers: { "X-Api-Key": "KXZtoEYZcJJf52pF89y0sw==5trPU675YpbKfL36" },
+        }
       );
       const quote = await response.json();
       setQuote(...quote);
@@ -88,23 +91,23 @@ function App() {
       variant: tag === "happiness" ? "outlined" : "filled",
     },
     {
-      title: "Technology",
-      onClick: () => setTag("technology"),
+      title: "Life",
+      onClick: () => setTag("life"),
       variant: tag === "technology" ? "outlined" : "filled",
     },
     {
       title: "Famous Quotes",
-      onClick: () => setTag("famous-quotes"),
+      onClick: () => setTag("famous"),
       variant: tag === "famous-quotes" ? "outlined" : "filled",
     },
     {
       title: "Sports",
-      onClick: () => setTag("sports"),
+      onClick: () => setTag("fitness"),
       variant: tag === "sports" ? "outlined" : "filled",
     },
     {
       title: "Wisdom",
-      onClick: () => setTag("wisdom"),
+      onClick: () => setTag("knowledge"),
       variant: tag === "wisdom" ? "outlined" : "filled",
     },
   ];
@@ -191,21 +194,40 @@ function App() {
                 display: "flex",
                 transition: "all 0.4s ease-in-out",
                 flexDirection: "column",
-                gap: 6,
+                gap: 4,
               }}
             >
-              <Typography
-                sx={{
-                  wordBreak: "break-all",
-                  wordWrap: "break-word",
-                  color: theme === "light" ? "#000" : "#fff",
-                  fontFamily: "IBM Plex Mono , monospace",
-                  fontSize: 20,
-                  transition: "all 0.4s ease-in-out",
-                }}
-              >
-                {quote.content}
-              </Typography>
+              <Stack gap={3} alignItems={"center"}>
+                {quote.category && (
+                  <Chip
+                    label={quote.category}
+                    sx={{
+                      textTransform: "capitalize",
+                      color: theme === "light" ? "#000" : "#fff",
+                      fontFamily: "IBM Plex Mono , monospace",
+                      transition: "all 0.4s ease-in-out",
+                      background: "#34D399",
+                      minWidth: 100,
+                      cursor: "pointer",
+                    }}
+                    onClick={() => setTag(quote.category)}
+                    variant={"contained"}
+                  />
+                )}
+                <Typography
+                  sx={{
+                    wordBreak: "break-all",
+                    wordWrap: "break-word",
+                    color: theme === "light" ? "#000" : "#fff",
+                    fontFamily: "IBM Plex Mono , monospace",
+                    fontSize: 20,
+                    transition: "all 0.4s ease-in-out",
+                    minWidth:250
+                  }}
+                >
+                  {quote.quote}
+                </Typography>
+              </Stack>
               <Typography
                 sx={{
                   wordBreak: "break-all",
@@ -216,7 +238,7 @@ function App() {
                   transition: "all 0.4s ease-in-out",
                 }}
               >
-                {quote.author} - {quote.dateAdded}
+                {quote.author}
               </Typography>
             </Box>
             <Stack direction={"row"} gap={1}>
@@ -250,7 +272,7 @@ function App() {
               <Tooltip title="Copy Quote" placement="top" arrow>
                 <Box
                   sx={{ cursor: "pointer" }}
-                  onClick={() => CopyToClipboard(quote.content)}
+                  onClick={() => CopyToClipboard(quote.quote)}
                 >
                   <IconButton
                     sx={{
@@ -315,15 +337,24 @@ function App() {
             p: 1,
           }}
         >
-          <Typography
-            sx={{
-              color: theme === "light" ? "#000" : "#fff",
-              fontFamily: "IBM Plex Mono , monospace",
-              transition: "all 0.4s ease-in-out",
-            }}
+          <a
+            href="https://jainil-solanki.vercel.app"
+            target="_blank"
+            rel="noreferrer"
           >
-            By Jainil Solanki
-          </Typography>
+            <Typography
+              sx={{
+                color: theme === "light" ? "#000" : "#fff",
+                fontFamily: "IBM Plex Mono , monospace",
+                transition: "all 0.4s ease-in-out",
+                "&:hover": {
+                  color: "#34D399",
+                },
+              }}
+            >
+              By Jainil Solanki
+            </Typography>
+          </a>
         </Grid>
       </Grid>
       <Toaster />
