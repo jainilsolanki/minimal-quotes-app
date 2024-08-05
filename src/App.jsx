@@ -34,7 +34,7 @@ function App() {
       const response = await fetch(
         `https://api.api-ninjas.com/v1/quotes?category=${tag}`,
         {
-          headers: { "X-Api-Key": "KXZtoEYZcJJf52pF89y0sw==5trPU675YpbKfL36" },
+          headers: { "X-Api-Key": import.meta.env.VITE_API_KEY },
         }
       );
       const quote = await response.json();
@@ -222,7 +222,7 @@ function App() {
                     fontFamily: "IBM Plex Mono , monospace",
                     fontSize: 20,
                     transition: "all 0.4s ease-in-out",
-                    minWidth:250
+                    minWidth: 250,
                   }}
                 >
                   {quote.quote}
